@@ -1,5 +1,5 @@
 import { Schema, model, Document, Types } from 'mongoose';
-import dateFormat from '../utils/dateFormat';
+import dateFormat from '../utils/dateFormat.js';
 
 interface IReaction extends Document {
   reactionId: Types.ObjectId;
@@ -17,66 +17,77 @@ interface IThought extends Document {
 }
 
 // Create the Reaction schema
-const reactionSchema = new Schema<IReaction>({
-  reactionId: {
-    type: Schema.Types.ObjectId,
-    default: () => new Types.ObjectId()
-  },
-  reactionBody: {
-    type: String,
-    required: true,
-    maxlength: 280
-  },
-  username: {
-    type: String,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: function (timestamp: Date): string {
-      return dateFormat(timestamp);
+const reactionSchema = new Schema<IReaction>(
+  {
+    reactionId: {
+      type: Schema.Types.ObjectId,
+      default: () => new Types.ObjectId()
+    },
+    reactionBody: {
+      type: String,
+      required: true,
+      maxlength: 280
+    },
+    username: {
+      type: String,
+      required: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
     }
-  }
-},
-{
-  toJSON: {
-    getters: true
   },
-  id: false
-});
+  {
+    toJSON: {
+      getters: true,
+      transform(_doc, ret) {
+        if (ret.createdAt) {
+          ret.createdAt = dateFormat(ret.createdAt);
+        }
+        return ret;
+      }
+    },
+    id: false
+  }
+);
 
 // Create the Thought schema
-const thoughtSchema = new Schema<IThought>({
-  thoughtText: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 280
+const thoughtSchema = new Schema<IThought>(
+  {
+    thoughtText: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 280
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    },
+    username: {
+      type: String,
+      unique: false,
+      required: true
+    },
+    reactions: [reactionSchema]
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: function (timestamp: Date): string {
-      return dateFormat(timestamp);
-    }
-  },
-  username: {
-    type: String,
-    required: true
-  },
-  reactions: [reactionSchema]
-},
-{
-  toJSON: {
-    virtuals: true,
-    getters: true
-  },
-  id: false
-});
+  {
+    toJSON: {
+      virtuals: true,
+      getters: true,
+      transform(_doc, ret) {
+        if (ret.createdAt) {
+          ret.createdAt = dateFormat(ret.createdAt);
+        }
+        return ret;
+      }
+    },
+    id: false
+  }
+);
 
 // Create a virtual property `reactionCount` that retrieves the length of the thought's reactions array
-thoughtSchema.virtual('reactionCount').get(function(this: IThought) {
+thoughtSchema.virtual('reactionCount').get(function (this: IThought) {
   return this.reactions.length;
 });
 

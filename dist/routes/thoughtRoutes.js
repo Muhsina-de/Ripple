@@ -1,17 +1,20 @@
 import { Router } from 'express';
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser, addFriend, removeFriend } from '../controllers/userController';
+import { getAllThoughts, getThoughtById, createThought, updateThought, deleteThought, addReaction, removeReaction } from '../controllers/thoughtController.js';
 const router = Router();
-// /api/users
+// Routes for thoughts
+// /api/thoughts
 router.route('/')
-    .get(getAllUsers)
-    .post(createUser);
-// /api/users/:userId
-router.route('/:userId')
-    .get(getUserById)
-    .put(updateUser)
-    .delete(deleteUser);
-// /api/users/:userId/friends/:friendId
-router.route('/:userId/friends/:friendId')
-    .post(addFriend)
-    .delete(removeFriend);
+    .get(getAllThoughts) // GET all thoughts
+    .post(createThought); // POST a new thought
+// /api/thoughts/:thoughtId
+router.route('/:thoughtId')
+    .get(getThoughtById) // GET a thought by ID
+    .put(updateThought) // PUT to update a thought
+    .delete(deleteThought); // DELETE a thought by ID
+// /api/thoughts/:thoughtId/reactions
+router.route('/:thoughtId/reactions')
+    .post(addReaction); // POST a reaction to a thought
+// /api/thoughts/:thoughtId/reactions/:reactionId
+router.route('/:thoughtId/reactions/:reactionId')
+    .delete(removeReaction); // DELETE a reaction by ID
 export default router;
