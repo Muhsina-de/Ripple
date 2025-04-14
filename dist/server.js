@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import userRoutes from './routes/userRoutes';
-import thoughtRoutes from './routes/thoughtRoutes';
+import userRoutes from './routes/userRoutes.js';
+import thoughtRoutes from './routes/thoughtRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 app.use(express.json());

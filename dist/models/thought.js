@@ -1,5 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
-import dateFormat from '../utils/dateFormat';
+import dateFormat from '../utils/dateFormat.js';
 // Create the Reaction schema
 const reactionSchema = new Schema({
     reactionId: {
@@ -17,12 +17,17 @@ const reactionSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now,
-        get: (value) => dateFormat(value) // Modify here, use value directly
+        default: Date.now
     }
 }, {
     toJSON: {
-        getters: true
+        getters: true,
+        transform(_doc, ret) {
+            if (ret.createdAt) {
+                ret.createdAt = dateFormat(ret.createdAt);
+            }
+            return ret;
+        }
     },
     id: false
 });
@@ -36,18 +41,24 @@ const thoughtSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now,
-        get: (value) => dateFormat(value) // Ensure the return type is string
+        default: Date.now
     },
     username: {
         type: String,
+        unique: false,
         required: true
     },
     reactions: [reactionSchema]
 }, {
     toJSON: {
         virtuals: true,
-        getters: true
+        getters: true,
+        transform(_doc, ret) {
+            if (ret.createdAt) {
+                ret.createdAt = dateFormat(ret.createdAt);
+            }
+            return ret;
+        }
     },
     id: false
 });

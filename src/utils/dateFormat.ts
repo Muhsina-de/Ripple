@@ -1,91 +1,91 @@
 const addDateSuffix = (date: number): string => {
-    let dateStr = date.toString();
-  
-    const lastChar = dateStr.charAt(dateStr.length - 1);
-  
-    if (lastChar === '1' && dateStr !== '11') {
-      dateStr = `${dateStr}st`;
-    } else if (lastChar === '2' && dateStr !== '12') {
-      dateStr = `${dateStr}nd`;
-    } else if (lastChar === '3' && dateStr !== '13') {
-      dateStr = `${dateStr}rd`;
-    } else {
-      dateStr = `${dateStr}th`;
-    }
-  
-    return dateStr;
-  };
-  
-  function dateFormat(timestamp: Date,
-    { monthLength = 'short', dateSuffix = true } = {}): string {
-    let months;
+  let dateStr = date.toString();
 
-    if (monthLength === 'short') {
-        months = {
-            0: 'Jan',
-            1: 'Feb',
-            2: 'Mar',
-            3: 'Apr',
-            4: 'May',
-            5: 'Jun',
-            6: 'Jul',
-            7: 'Aug',
-            8: 'Sep',
-            9: 'Oct',
-            10: 'Nov',
-            11: 'Dec'
-        };
-    } else {
-        months = {
-            0: 'January',
-            1: 'February',
-            2: 'March',
-            3: 'April',
-            4: 'May',
-            5: 'June',
-            6: 'July',
-            7: 'August',
-            8: 'September',
-            9: 'October',
-            10: 'November',
-            11: 'December'
-        };
-    }
+  const lastChar = dateStr.charAt(dateStr.length - 1);
 
-    const dateObj = new Date(timestamp);
-    const formattedMonth = months[dateObj.getMonth()];
+  if (lastChar === '1' && dateStr !== '11') {
+    dateStr = `${dateStr}st`;
+  } else if (lastChar === '2' && dateStr !== '12') {
+    dateStr = `${dateStr}nd`;
+  } else if (lastChar === '3' && dateStr !== '13') {
+    dateStr = `${dateStr}rd`;
+  } else {
+    dateStr = `${dateStr}th`;
+  }
 
-    let dayOfMonth;
+  return dateStr;
+};
 
-    if (dateSuffix) {
-        dayOfMonth = addDateSuffix(dateObj.getDate());
-    } else {
-        dayOfMonth = dateObj.getDate();
-    }
+function dateFormat(timestamp: Date,
+  { monthLength = 'short', dateSuffix = true } = {}): string {
+  let months;
 
-    const year = dateObj.getFullYear();
+  if (monthLength === 'short') {
+      months = {
+          0: 'Jan',
+          1: 'Feb',
+          2: 'Mar',
+          3: 'Apr',
+          4: 'May',
+          5: 'Jun',
+          6: 'Jul',
+          7: 'Aug',
+          8: 'Sep',
+          9: 'Oct',
+          10: 'Nov',
+          11: 'Dec'
+      };
+  } else {
+      months = {
+          0: 'January',
+          1: 'February',
+          2: 'March',
+          3: 'April',
+          4: 'May',
+          5: 'June',
+          6: 'July',
+          7: 'August',
+          8: 'September',
+          9: 'October',
+          10: 'November',
+          11: 'December'
+      };
+  }
 
-    let hour = dateObj.getHours();
-    if (hour > 12) {
-        hour = Math.floor(hour / 2);
-    }
-    if (hour === 0) {
-        hour = 12;
-    }
+  const dateObj = new Date(timestamp);
+  const formattedMonth = months[dateObj.getMonth()];
 
-    const minutes = dateObj.getMinutes();
+  let dayOfMonth;
 
-    let periodOfDay;
+  if (dateSuffix) {
+      dayOfMonth = addDateSuffix(dateObj.getDate());
+  } else {
+      dayOfMonth = dateObj.getDate();
+  }
 
-    if (dateObj.getHours() >= 12) {
-        periodOfDay = 'pm';
-    } else {
-        periodOfDay = 'am';
-    }
+  const year = dateObj.getFullYear();
 
-    const formattedTimeStamp = `${formattedMonth} ${dayOfMonth}, ${year} at ${hour}:${minutes} ${periodOfDay}`;
+  let hour = dateObj.getHours();
+  if (hour > 12) {
+      hour = Math.floor(hour / 2);
+  }
+  if (hour === 0) {
+      hour = 12;
+  }
 
-    return formattedTimeStamp;
+  const minutes = dateObj.getMinutes();
+
+  let periodOfDay;
+
+  if (dateObj.getHours() >= 12) {
+      periodOfDay = 'pm';
+  } else {
+      periodOfDay = 'am';
+  }
+
+  const formattedTimeStamp = `${formattedMonth} ${dayOfMonth}, ${year} at ${hour}:${minutes} ${periodOfDay}`;
+
+  return formattedTimeStamp;
 }
-  
-  export default dateFormat;
+
+export default dateFormat;
