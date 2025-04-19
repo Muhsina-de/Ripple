@@ -4,6 +4,13 @@ export const getAllUsers = async (_req, res) => {
     try {
         const users = await User.find().populate('thoughts').populate('friends');
         res.json(users);
+        //parse json and display user id and email and thoughts
+        users.forEach(user => {
+            console.log(`User ID: ${user._id}, Email: ${user.email}`);
+            user.thoughts.forEach((thought) => {
+                console.log(`Thought ID: ${thought._id}, Thought Text: ${thought.thoughtText}`);
+            });
+        });
     }
     catch (err) {
         res.status(500).json(err);
