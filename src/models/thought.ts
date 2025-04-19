@@ -66,7 +66,7 @@ const thoughtSchema = new Schema<IThought>(
     },
     username: {
       type: String,
-      unique: false,
+      
       required: true
     },
     reactions: [reactionSchema]

@@ -24,17 +24,32 @@ export const getThoughtById = async (req: Request, res: Response) => {
   }
 };
 
-export const createThought = async (req: Request, res: Response) => {
+export const createThought = async (req: Request, res: Response): Promise<void> => {
   try {
-    const thought = await Thought.create(req.body);
-    await User.findByIdAndUpdate(
-      req.body.userId,
-      { $push: { thoughts: thought._id } },
-      { new: true }
-    );
-    res.json(thought);
+    const { userId, thoughtText } = req.body;
+
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: 'User does not exist' });
+      return; // ensure function exits after sending response
+    }
+
+    // Create the thought
+    const thought = await Thought.create({
+      thoughtText,
+      username: user.username, // use real username from user doc
+    });
+
+    // Push thought to user's thoughts array
+    user.thoughts.push(thought._id as typeof user.thoughts[0]);
+    await user.save();
+
+    res.status(201).json(thought);
+    // display user id and thought text
+    console.log(`User ID: ${userId}, Thought Text: ${thoughtText}`);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ error: 'Failed to create thought', details: err });
   }
 };
 
@@ -59,7 +74,7 @@ export const deleteThought = async (req: Request, res: Response) => {
       return;
     }
     await User.findByIdAndUpdate(
-      thought.username,
+      {username: thought.username},
       { $pull: { thoughts: req.params.thoughtId } }
     );
     res.json({ message: 'Thought deleted' });
@@ -92,6 +107,9 @@ export const removeReaction = async (req: Request, res: Response) => {
       { $pull: { reactions: { reactionId: req.params.reactionId } } },
       { new: true }
     );
+    //display msg saying reaction deleted
+    res.status(200).json({ message: 'Reaction deleted' });
+    
     if (!thought) {
       res.status(404).json({ message: 'No thought found with this ID' });
       return;
