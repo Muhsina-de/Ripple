@@ -1,85 +1,88 @@
-# Ripple API
-An API from scratch for a social network web application where users can share their thoughts, react to friends' thoughts, and create a friend list. 
+# 🌊 Ripple API
 
-MongoDB is a popular choice for many social networks due to its speed with large amounts of data and flexibility with unstructured data. This project is an API for a social network web application where users can share their thoughts, react to friends' thoughts, and create a friend list. The API is built using Express.js for routing, a MongoDB database, and the Mongoose ODM.
+> *Where thoughts ripple through the social network like waves in the ocean!* 🏄‍♂️
 
-## User Story
+A modern, lightning-fast API for a social network web application where users can share their thoughts, react to friends' thoughts, and create their digital friend circle. Built with love (and a lot of coffee ☕) using Express.js, MongoDB, and Mongoose ODM.
 
-```md
-AS A social media startup
-I WANT an API for my social network that uses a NoSQL database
-SO THAT my website can handle large amounts of unstructured data
-```
+## 🎥 Live Demo
 
-## Table of Contents
+### Screenshot
+![Ripple API Screenshot](./assets/Ripplet.png)
+*The beautiful interface of Ripple API in action!*
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Models](#models)
-- [API Routes](#api-routes)
-- [License](#license)
+### Video Walkthrough
+[Watch the Demo Video](https://drive.google.com/file/d/1Qopm7VOFTaDiSt3TOOUBvvCxWolK6AMf/view?usp=drive_link)
+*Click the link above to watch the full demo video!*
 
-## Installation
+## 📑 Table of Contents
 
-1. Clone the repository to your local machine.
-2. Install MongoDB on your machine. Follow the [MongoDB installation guide](https://coding-boot-camp.github.io/full-stack/mongodb/how-to-install-mongodb) to install MongoDB locally.
-3. Navigate to the project directory.
-4. Run `npm install` to install the necessary dependencies.
+- [🚀 Installation](#installation)
+- [💻 Usage](#usage)
+- [📊 Models](#models)
+- [🛣️ API Routes](#api-routes)
+- [📜 License](#license)
 
-## Usage
+## 🚀 Installation
 
-1. Start the MongoDB server by running `mongod`.
-2. Run `npm start` to start the Express server. The server will start on port 3001 by default.
-3. Use Insomnia to interact with the API endpoints.
+1. Clone the repository to your local machine (like a digital treasure hunt! 🗺️)
+2. Install MongoDB on your machine. Follow the [MongoDB installation guide](https://coding-boot-camp.github.io/full-stack/mongodb/how-to-install-mongodb) to install MongoDB locally
+3. Navigate to the project directory (your new digital home 🏠)
+4. Run `npm install` to install the necessary dependencies (gathering your digital tools 🛠️)
 
-## Models
+## 💻 Usage
 
-### User
+1. Start the MongoDB server by running `mongod` (awakening the database dragon 🐉)
+2. Run `npm start` to start the Express server (your API is now alive! ⚡)
+3. Use Insomnia to interact with the API endpoints (time to make some waves! 🌊)
+
+## 📊 Models
+
+### 👤 User
 
 - `username`
   - String
-  - Unique
+  - Unique (because you're one of a kind! ✨)
   - Required
-  - Trimmed
+  - Trimmed (no messy edges here! ✂️)
 
 - `email`
   - String
   - Required
   - Unique
-  - Must match a valid email address
+  - Must match a valid email address (we need to reach you! 📧)
 
 - `thoughts`
-  - Array of `_id` values referencing the `Thought` model
+  - Array of `_id` values referencing the `Thought` model (your digital diary 📔)
 
 - `friends`
-  - Array of `_id` values referencing the `User` model (self-reference)
+  - Array of `_id` values referencing the `User` model (your digital squad 👥)
 
 **Schema Settings**:
-  - Virtual called `friendCount` that retrieves the length of the user's `friends` array field on query.
+  - Virtual called `friendCount` that retrieves the length of the user's `friends` array field on query (keeping track of your social circle! 🔄)
 
-### Thought
+### 💭 Thought
 
 - `thoughtText`
   - String
   - Required
-  - Must be between 1 and 280 characters
+  - Must be between 1 and 280 characters (Twitter who? We're keeping it concise! 🎯)
 
 - `createdAt`
   - Date
   - Set default value to the current timestamp
-  - Use a getter method to format the timestamp on query
+  - Use a getter method to format the timestamp on query (time flies when you're having fun! ⏰)
 
 - `username`
   - String
   - Required
 
 - `reactions`
-  - Array of nested documents created with the `reactionSchema`
+  - Array of nested documents created with the `reactionSchema` (let the reactions flow! 🌊)
 
 **Schema Settings**:
-  - Virtual called `reactionCount` that retrieves the length of the thought's `reactions` array field on query.
+  - Virtual called `reactionCount` that retrieves the length of the thought's `reactions` array field on query (counting those digital high-fives! ✋)
 
-### Reaction (Schema Only)
+### 💫 Reaction (Schema Only)
 
 - `reactionId`
   - Mongoose's ObjectId data type
@@ -88,7 +91,7 @@ SO THAT my website can handle large amounts of unstructured data
 - `reactionBody`
   - String
   - Required
-  - 280 character maximum
+  - 280 character maximum (keeping it snappy! 🎯)
 
 - `username`
   - String
@@ -99,37 +102,43 @@ SO THAT my website can handle large amounts of unstructured data
   - Set default value to the current timestamp
   - Use a getter method to format the timestamp on query
 
-**Schema Settings**:
-  - This will not be a model, but rather will be used as the `reaction` field's subdocument schema in the `Thought` model.
+## 🛣️ API Routes
 
-## API Routes
+### `/api/users` 👥
 
-### `/api/users`
+- `GET` all users (meet the crowd! 👋)
+- `GET` a single user by its `_id` and populated thought and friend data (finding your digital twin! 🔍)
+- `POST` a new user (welcome to the family! 🏠)
+- `PUT` to update a user by its `_id` (time for a digital makeover! 💅)
+- `DELETE` to remove a user by its `_id` (farewell, friend! 👋)
 
-- `GET` all users
-- `GET` a single user by its `_id` and populated thought and friend data
-- `POST` a new user
-- `PUT` to update a user by its `_id`
-- `DELETE` to remove a user by its `_id`
+### `/api/users/:userId/friends/:friendId` 🤝
 
-### `/api/users/:userId/friends/:friendId`
+- `POST` to add a new friend to a user's friend list (making new friends! 🌟)
+- `DELETE` to remove a friend from a user's friend list (parting ways! 👋)
 
-- `POST` to add a new friend to a user's friend list
-- `DELETE` to remove a friend from a user's friend list
+### `/api/thoughts` 💭
 
-### `/api/thoughts`
+- `GET` to get all thoughts (reading minds, digitally! 🧠)
+- `GET` to get a single thought by its `_id` (finding that needle in the digital haystack! 🔍)
+- `POST` to create a new thought (let your thoughts ripple! 🌊)
+- `PUT` to update a thought by its `_id` (time for a thought makeover! 💭)
+- `DELETE` to remove a thought by its `_id` (out with the old! 🗑️)
 
-- `GET` to get all thoughts
-- `GET` to get a single thought by its `_id`
-- `POST` to create a new thought and push the created thought's `_id` to the associated user's `thoughts` array field
-- `PUT` to update a thought by its `_id`
-- `DELETE` to remove a thought by its `_id`
+### `/api/thoughts/:thoughtId/reactions` ⚡
 
-### `/api/thoughts/:thoughtId/reactions`
+- `POST` to create a reaction stored in a single thought's `reactions` array field (react with style! 🎨)
+- `DELETE` to pull and remove a reaction by the reaction's `reactionId` value (taking it back! ↩️)
 
-- `POST` to create a reaction stored in a single thought's `reactions` array field
-- `DELETE` to pull and remove a reaction by the reaction's `reactionId` value
+## 👥 Authors and Pair-Programming BFFs
 
-## License
+- Guy Ricketts (KnifeDad) - [@KnifeDad](https://github.com/KnifeDad)
+- Muhsina Shinwari - [@Muhsina-de](https://github.com/Muhsina-de)
 
-This project is licensed under the MIT License.
+## 📜 License
+
+This project is licensed under the MIT License. Go forth and code! 🚀
+
+---
+
+*Made with 💖 and a sprinkle of digital magic ✨ by KnifeDad and Muhsina*
